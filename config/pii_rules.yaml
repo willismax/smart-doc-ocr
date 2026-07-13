@@ -1,0 +1,29 @@
+# 自定義 PII 規則（疊加在內建規則之上；內建規則見 smartdoc/pii.py）
+#
+# 欄位說明：
+#   name             實體代碼（英文大寫）
+#   label            遮蔽時顯示的中文標籤，例：《健保卡號》
+#   regex            Python 正規表示式
+#   score            信心分數 0~1（重疊時分數高者優先）
+#   validator        可選：tw_id｜tw_company_id｜luhn（用內建檢查碼驗證）
+#   context_words    上下文詞（附近出現才算 PII，可大幅降低誤報）
+#   context_required 有填 context_words 時預設 true
+
+pii_rules:
+  - name: NHI_CARD
+    label: 健保卡號
+    regex: '(?<!\d)\d{12}(?!\d)'
+    score: 0.7
+    context_words: ["健保", "健保卡"]
+
+  - name: TW_RESIDENT_ID
+    label: 居留證號
+    regex: '(?<![A-Z0-9])[A-Z][89]\d{8}(?!\d)'
+    score: 0.85
+    context_words: ["居留", "居留證", "ARC"]
+
+  - name: VEHICLE_PLATE
+    label: 車牌號碼
+    regex: '(?<![A-Z0-9])[A-Z]{2,3}-?\d{3,4}(?![A-Z0-9])'
+    score: 0.6
+    context_words: ["車牌", "車號", "牌照"]

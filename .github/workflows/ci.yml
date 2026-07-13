@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # 測試套件刻意只依賴核心套件（重依賴 lazy import，缺席時優雅降級）
+      - name: Install core dependencies
+        run: python -m pip install -r requirements-core.txt
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+        env:
+          PYTHONUTF8: "1"
+
+      - name: Syntax check all sources
+        run: python -m compileall -q smartdoc app.py cli.py scripts

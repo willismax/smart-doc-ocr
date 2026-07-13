@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# AI 模型（體積大，用 scripts/download_models.py 下載）
+models/*
+!models/.gitkeep
+
+# 執行時產生（含個資，絕不入版控）
+logs/*
+!logs/.gitkeep
+output/*
+!output/.gitkeep
+
+# 離線部署產物
+offline_packages/
+python-3.12/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml

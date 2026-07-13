@@ -1,0 +1,23 @@
+# ── 核心（必要）──────────────────────────────────────────────
+# 建議 Python 3.10 ~ 3.12（PaddlePaddle 尚未支援 3.13+）
+PyMuPDF>=1.24,<2          # PDF 讀取 + rasterize（免 poppler）
+Pillow>=10.0              # 圖片讀取
+numpy>=1.26,<3
+PyYAML>=6.0
+streamlit>=1.37,<2        # 網頁介面
+openpyxl>=3.1             # Excel 讀取 + 報告輸出
+
+# ── OCR 引擎（掃描 PDF / 圖片辨識；CPU 版）────────────────────
+paddlepaddle==2.6.2       # GPU 機器改裝 paddlepaddle-gpu（對應 CUDA 版本）
+paddleocr==2.8.1
+opencv-python-headless>=4.9,<5   # 影像前處理
+
+# ── Office / Email 讀取 ──────────────────────────────────────
+markitdown[docx,xlsx,pptx]>=0.1.1
+python-docx>=1.1          # Word 降級讀取器
+python-pptx>=0.6.23       # PPT 降級讀取器
+extract-msg>=0.48         # Outlook .msg
+
+# ── 語意比對（選用：不裝會自動降級為 n-gram 比對）──────────────
+sentence-transformers>=3.0,<4
+torch==2.5.1   # 鎖定穩定版；2.13 在部分 Windows 環境有 DLL 載入問題（WinError 127）

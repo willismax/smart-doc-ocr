@@ -1,0 +1,7 @@
+# 核心最小依賴 — CI 與「僅處理數位文件」的輕量安裝用
+# （完整功能請用 requirements.txt）
+PyMuPDF>=1.24,<2
+Pillow>=10.0
+numpy>=1.26,<3
+PyYAML>=6.0
+openpyxl>=3.1

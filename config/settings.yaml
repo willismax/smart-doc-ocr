@@ -1,0 +1,25 @@
+# 全域設定（覆蓋 smartdoc/config.py 的預設值；刪掉此檔也能用內建預設啟動）
+
+limits:
+  max_file_size_mb: 200     # 單檔大小上限
+  max_pdf_pages: 1000       # 單一 PDF 最多處理頁數
+  pdf_chunk_pages: 10       # 大 PDF 分批頁數（記憶體控制）
+  max_retries: 2            # 未預期錯誤的重試次數
+  retry_backoff_sec: 2.0
+
+ocr:
+  engine: paddle            # paddle｜none（none = 停用 OCR，只處理數位文件）
+  lang: chinese_cht         # 繁體中文；簡中改 ch，英文改 en
+  use_gpu: auto             # auto｜true｜false
+  dpi: 300                  # 掃描 PDF 轉圖解析度（越高越準但越慢）
+  min_text_len_per_page: 50
+  digital_coverage: 0.8
+  scanned_coverage: 0.1
+
+pii:
+  default_mask: true        # 預設遮蔽個資（要看原文得在介面主動關閉）
+  operator: replace         # replace｜redact｜hash｜keep
+  audit_enabled: true       # 稽核日誌（append-only JSONL + 雜湊鏈）
+
+batch:
+  max_workers: 2            # 同時處理的文件數；CPU 弱的機器保持 1~2
