@@ -30,16 +30,31 @@ foreach ($m in $syncMarkers) {
 }
 
 # 0. 確保 uv 可用（優先用已安裝的；沒有就先透過 pip 裝）
+# 注意：偵測一律走 cmd /c 內部重導向。PowerShell 5.1 在 Stop 模式下，
+# 原生指令的 2>$null 會把 stderr 包成終止錯誤，讓「檢查」本身直接炸掉。
+function Test-Uv {
+    cmd /c "uv --version >nul 2>nul"
+    if ($LASTEXITCODE -eq 0) { return "uv" }
+    cmd /c "python -m uv --version >nul 2>nul"
+    if ($LASTEXITCODE -eq 0) { return "python-m" }
+    return $null
+}
+
+$script:UvMode = Test-Uv
+if (-not $script:UvMode) {
+    Write-Host "找不到 uv，先透過 pip 安裝…"
+    cmd /c "python -m pip install --quiet uv"
+    if ($LASTEXITCODE -ne 0) {
+        throw "無法安裝 uv：請確認 python 與 pip 可正常執行（python --version）"
+    }
+    $script:UvMode = Test-Uv
+    if (-not $script:UvMode) { throw "uv 安裝完成但仍無法執行，請回報 Issue" }
+}
+
 function Invoke-Uv { param([string[]]$UvArgs)
-    if (Get-Command uv -ErrorAction SilentlyContinue) { & uv @UvArgs }
+    if ($script:UvMode -eq "uv") { & uv @UvArgs }
     else { & python -m uv @UvArgs }
     if ($LASTEXITCODE -ne 0) { throw "uv 指令失敗：uv $($UvArgs -join ' ')" }
-}
-$hasUv = (Get-Command uv -ErrorAction SilentlyContinue) -or
-         ((& python -m uv --version 2>$null) -ne $null)
-if (-not $hasUv) {
-    Write-Host "安裝 uv 中…"
-    python -m pip install --quiet uv
 }
 Invoke-Uv @("--version")
 
