@@ -36,6 +36,10 @@ python -m uv pip install --python .venv -r requirements-core.txt
 - PaddlePaddle 打不開含非 ASCII 字元的路徑，模型路徑處理請走
   `OcrEngine._ascii_safe_models()`
 - 呼叫 Python 子程序時設 `PYTHONUTF8=1`
+- PowerShell 腳本內**不要對原生指令用 `2>$null` / `2>&1`**：
+  PS 5.1 在 `$ErrorActionPreference = "Stop"` 下會把 stderr 包成終止錯誤，
+  連「檢查指令是否存在」都會直接炸。需要靜音偵測時走
+  `cmd /c "指令 >nul 2>nul"` 再看 `$LASTEXITCODE`
 
 ## 架構速覽
 
