@@ -31,6 +31,8 @@ python -m uv pip install --python .venv -r requirements-core.txt
 
 - `.ps1` 檔案必須存成 **UTF-8 with BOM**（PowerShell 5.1 會把無 BOM 檔當 Big5 解析，
   中文註解會吞掉換行讓指令消失）
+- `.bat` 檔案必須**全 ASCII**（cmd 以 OEM 代碼頁逐行解析，中文位元組會吞換行；
+  cmd 對 UTF-8 BOM 支援又很差，所以連 BOM 這條路都沒有）
 - **torch 必須先於 paddle import**（DLL 衝突 → WinError 127），
   新增會 import 兩者之一的進入點時，記得先預載 torch
 - PaddlePaddle 打不開含非 ASCII 字元的路徑，模型路徑處理請走
