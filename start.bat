@@ -1,18 +1,22 @@
 @echo off
+rem Keep this file ASCII-only: cmd.exe parses batch files with the OEM
+rem codepage (Big5 on zh-TW systems) and multi-byte characters corrupt
+rem line breaks, turning comments into broken commands.
 chcp 65001 > nul
 cd /d "%~dp0"
 
-if not exist ".venv\Scripts\activate.bat" (
-    echo [錯誤] 尚未安裝。請先以系統管理員執行 install.ps1
+if not exist ".venv\Scripts\python.exe" (
+    echo [ERROR] Not installed yet. Run install.ps1 first.
+    echo         PowerShell:  Set-ExecutionPolicy -Scope Process Bypass
+    echo                      .\install.ps1
     pause
     exit /b 1
 )
 
-call .venv\Scripts\activate.bat
 echo ============================================
-echo   智慧文件辨識系統 啟動中...
-echo   請在瀏覽器開啟  http://localhost:8501
-echo   （關閉此視窗即停止系統）
+echo   Smart Doc OCR - starting...
+echo   Open your browser at:  http://localhost:8501
+echo   (Close this window to stop the system)
 echo ============================================
-streamlit run app.py --server.port 8501 --server.headless true --browser.gatherUsageStats false --server.address 127.0.0.1
+".venv\Scripts\python.exe" -m streamlit run app.py --server.port 8501 --server.headless true --browser.gatherUsageStats false --server.address 127.0.0.1
 pause
